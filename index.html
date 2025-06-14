@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arrow Dash: Cosmic Collector</title>
+    <!-- Tailwind CSS for utility classes, Inter font for overall aesthetics -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Tone.js for background music generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #2a0050, #0a0a2a); /* Deep space gradient */
+            overflow: hidden; /* Prevent scrollbars */
+        }
+
+        .game-container {
+            background-color: #1a003a; /* Darker space background */
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            max-width: 90vw; /* Responsive width */
+            max-height: 90vh; /* Responsive height */
+            margin: 20px; /* Add some margin for smaller screens */
+            border: 2px solid #5a189a; /* Cosmic border */
+        }
+
+        .game-info {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            padding: 0 10px;
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #d1c4e9; /* Light purple for text */
+        }
+
+        canvas {
+            background-color: #0d0d21; /* Very dark blue for canvas space */
+            border-radius: 15px;
+            border: 2px solid #4a148c; /* Dark purple border */
+            display: block;
+            touch-action: none; /* Disable default touch actions */
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.4); /* Deeper inner shadow */
+            transition: all 0.3s ease; /* Smooth transition for resizing/updates */
+            width: clamp(280px, 80vw, 500px); /* Responsive canvas size */
+            height: clamp(280px, 80vw, 500px);
+        }
+
+        .game-message {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ffeb3b; /* Bright yellow for messages */
+            text-shadow: 0 0 5px rgba(255, 235, 59, 0.7);
+            text-align: center;
+            min-height: 2em; /* Reserve space to prevent CLS */
+        }
+
+        .game-controls {
+            display: flex;
+            gap: 15px;
+            width: 100%;
+            justify-content: center;
+            flex-wrap: wrap; /* Allow controls to wrap on smaller screens */
+        }
+
+        .game-button {
+            background: linear-gradient(145deg, #6a1b9a, #8e24aa); /* Purple gradient */
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .game-button:hover {
+            background: linear-gradient(145deg, #7b1fa2, #9c27b0);
+            box-shadow: 0 7px 20px rgba(0, 0, 0, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .game-button:active {
+            transform: translateY(0);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        /* D-pad style touch controls */
+        .touch-controls {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 5px;
+            width: 180px; /* Fixed width for D-pad */
+            height: 180px; /* Fixed height for D-pad */
+            margin-top: 15px;
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            padding: 10px;
+        }
+
+        .touch-button-dpad {
+            background: #8e24aa; /* Deep purple */
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            transition: background-color 0.1s ease;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .touch-button-dpad:active {
+            background: #6a1b9a;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Specific grid placement for D-pad buttons */
+        #upButton { grid-area: 1 / 2 / 2 / 3; }
+        #leftButton { grid-area: 2 / 1 / 3 / 2; }
+        #centerButton { grid-area: 2 / 2 / 3 / 3; visibility: hidden; } /* Center button hidden */
+        #rightButton { grid-area: 2 / 3 / 3 / 4; }
+        #downButton { grid-area: 3 / 2 / 4 / 3; }
+
+        .music-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+            padding: 0 10px;
+            width: 100%;
+            justify-content: center;
+            flex-wrap: wrap;
+            color: #d1c4e9;
+        }
+        .music-controls label {
+            font-weight: bold;
+        }
+        .music-controls input[type="range"] {
+            -webkit-appearance: none;
+            width: 100px;
+            height: 8px;
+            background: #4a148c; /* Dark purple track */
+            border-radius: 5px;
+            outline: none;
+            opacity: 0.7;
+            transition: opacity .2s;
+        }
+        .music-controls input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #e0f7fa; /* Light cyan thumb */
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .music-controls input[type="range"]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #e0f7fa; /* Light cyan thumb */
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .music-button {
+            background: #00bcd4; /* Cyan */
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+        }
+        .music-button:hover {
+            background: #00acc1;
+        }
+        .music-button.active {
+            background: #00838f; /* Darker cyan when active/playing */
+        }
+
+
+        /* Media queries for responsiveness */
+        @media (max-width: 768px) {
+            .game-container {
+                padding: 15px;
+                gap: 15px;
+            }
+            .game-info {
+                font-size: 1rem;
+            }
+            .game-message {
+                font-size: 1.2rem;
+            }
+            .game-button {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+            .touch-controls {
+                width: 150px;
+                height: 150px;
+            }
+            .touch-button-dpad {
+                font-size: 1.2rem;
+            }
+            .music-controls {
+                flex-direction: column; /* Stack music controls on small screens */
+            }
+        }
+
+        /* SVG for Player (Rocket) */
+        .player-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            fill: #7e57c2; /* Medium purple for rocket body */
+            stroke: #d1c4e9; /* Light outline */
+            stroke-width: 1;
+            filter: drop-shadow(0 0 5px rgba(126, 87, 194, 0.8)); /* Subtle glow */
+        }
+        .player-fire {
+            fill: orange; /* Flame color */
+            filter: drop-shadow(0 0 5px rgba(255, 165, 0, 0.8));
+        }
+
+        /* SVG for Target (Star/Gem) */
+        .target-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            fill: #a7ffeb; /* Light aqua for gem */
+            stroke: #00bcd4; /* Cyan outline */
+            stroke-width: 1;
+            filter: drop-shadow(0 0 5px rgba(167, 255, 235, 0.8)); /* Subtle glow */
+        }
+
+        /* SVG for Obstacle (Asteroid/Spike) */
+        .obstacle-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            fill: #ef5350; /* Red for asteroid */
+            stroke: #ffcdd2; /* Lighter red outline */
+            stroke-width: 1;
+            filter: drop-shadow(0 0 5px rgba(239, 83, 80, 0.8)); /* Subtle glow */
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen">
+    <div class="game-container">
+        <div class="game-info">
+            <span id="score">Score: 0</span>
+            <span id="high-score">High Score: 0</span>
+        </div>
+        <canvas id="gameCanvas"></canvas>
+        <div id="gameMessage" class="game-message">Guide your rocket! Collect gems, avoid asteroids!</div>
+        <div class="game-controls">
+            <button id="startButton" class="game-button">Launch!</button>
+            <button id="restartButton" class="game-button hidden">Restart Mission</button>
+        </div>
+        <!-- D-pad style touch controls for mobile -->
+        <div class="touch-controls hidden" id="mobileControls">
+            <button id="upButton" class="touch-button-dpad">▲</button>
+            <button id="leftButton" class="touch-button-dpad">◀</button>
+            <div id="centerButton"></div> <!-- Placeholder for center -->
+            <button id="rightButton" class="touch-button-dpad">▶</button>
+            <button id="downButton" class="touch-button-dpad">▼</button>
+        </div>
+        <div class="music-controls">
+            <button id="toggleMusicButton" class="music-button active">🔊 Music On</button>
+            <label for="volumeSlider">Volume:</label>
+            <input type="range" id="volumeSlider" min="-60" max="0" value="-10" step="1">
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const scoreDisplay = document.getElementById('score');
+        const highScoreDisplay = document.getElementById('high-score');
+        const gameMessage = document.getElementById('gameMessage');
+        const startButton = document.getElementById('startButton');
+        const restartButton = document.getElementById('restartButton');
+        const mobileControls = document.getElementById('mobileControls');
+        const upButton = document.getElementById('upButton');
+        const downButton = document.getElementById('downButton');
+        const leftButton = document.getElementById('leftButton');
+        const rightButton = document.getElementById('rightButton');
+        const toggleMusicButton = document.getElementById('toggleMusicButton');
+        const volumeSlider = document.getElementById('volumeSlider');
+
+        let player;
+        let targets = [];
+        let obstacles = [];
+        let score = 0;
+        let highScore = localStorage.getItem('arrowDashHighScore') || 0;
+        let gameOver = false;
+        let gameStarted = false;
+        let animationFrameId;
+
+        // Game configuration (relative to canvas size for responsiveness)
+        const PLAYER_SIZE_RATIO = 0.05;
+        const OBJECT_SIZE_RATIO = 0.04;
+        const PLAYER_SPEED_RATIO = 0.005; // Base speed, scales with level
+        const INITIAL_TARGETS = 5;
+        const INITIAL_OBSTACLES = 3;
+        const MAX_TARGETS = 10;
+        const MAX_OBSTACLES = 8;
+        const LEVEL_THRESHOLD = 5; // Score points needed to level up
+
+        let playerSize, objectSize, playerSpeed;
+        let currentDirection = { x: 0, y: 0 }; // Player's current continuous movement direction
+        let currentLevel = 1;
+
+        // Tone.js specific variables
+        let mainSynth, bassSynth, leadSynth;
+        let mainLoop, bassLoop, leadLoop;
+        let musicMuted = false;
+
+        // --- Music Setup (More complex and enjoyable) ---
+        function setupMusic() {
+            // Initialize main ambient synth
+            mainSynth = new Tone.PolySynth(Tone.Synth, {
+                oscillator: { type: "triangle" },
+                envelope: { attack: 0.5, decay: 0.5, sustain: 0.7, release: 1.2 },
+                volume: -18
+            }).toDestination();
+
+            // Initialize bass synth
+            bassSynth = new Tone.Synth({
+                oscillator: { type: "square" },
+                envelope: { attack: 0.1, decay: 0.3, sustain: 0.6, release: 0.7 },
+                volume: -12
+            }).toDestination();
+
+            // Initialize lead synth (for more melodic elements)
+            leadSynth = new Tone.Synth({
+                oscillator: { type: "sine" },
+                envelope: { attack: 0.05, decay: 0.1, sustain: 0.4, release: 0.5 },
+                volume: -20
+            }).toDestination();
+
+            // Main ambient chord progression
+            const mainNotes = [
+                ["C3", "E3", "G3"],
+                ["F3", "A3", "C4"],
+                ["G3", "B3", "D4"],
+                ["C3", "E3", "G3"]
+            ];
+            let mainNoteIndex = 0;
+            mainLoop = new Tone.Loop((time) => {
+                mainSynth.triggerAttackRelease(mainNotes[mainNoteIndex % mainNotes.length], "2n", time);
+                mainNoteIndex++;
+            }, "2n").start(0); // Repeat every half note
+
+            // Bass line following the root notes
+            const bassNotes = ["C2", "F2", "G2", "C2"];
+            let bassNoteIndex = 0;
+            bassLoop = new Tone.Loop((time) => {
+                bassSynth.triggerAttackRelease(bassNotes[bassNoteIndex % bassNotes.length], "1n", time);
+                bassNoteIndex++;
+            }, "1n").start(0); // Repeat every whole note
+
+            // Occasional lead melody notes
+            const leadNotes = ["G4", "A4", "Bb4", "G4", "C5", "Bb4", "A4", "G4", null, "F4", "Eb4", "D4", null];
+            let leadNoteIndex = 0;
+            leadLoop = new Tone.Loop((time) => {
+                const note = leadNotes[leadNoteIndex % leadNotes.length];
+                if (note) {
+                    leadSynth.triggerAttackRelease(note, "8n", time);
+                }
+                leadNoteIndex++;
+            }, "4n").start(0); // Repeat every quarter note
+
+            // Initial volume from slider
+            const initialVolume = parseFloat(volumeSlider.value);
+            mainSynth.volume.value = initialVolume;
+            bassSynth.volume.value = initialVolume;
+            leadSynth.volume.value = initialVolume;
+        }
+
+        function toggleMusic() {
+            if (Tone.Transport.state === 'started') {
+                Tone.Transport.stop();
+                toggleMusicButton.textContent = '🔇 Music Off';
+                toggleMusicButton.classList.remove('active');
+                musicMuted = true;
+            } else {
+                // Tone.start() ensures audio context is running, important for user interaction
+                Tone.start().then(() => {
+                    Tone.Transport.start();
+                    toggleMusicButton.textContent = '🔊 Music On';
+                    toggleMusicButton.classList.add('active');
+                    musicMuted = false;
+                }).catch(e => console.error("Tone.js start failed:", e));
+            }
+        }
+
+        function changeVolume() {
+            const newVolume = parseFloat(volumeSlider.value);
+            if (mainSynth) mainSynth.volume.value = newVolume;
+            if (bassSynth) bassSynth.volume.value = newVolume;
+            if (leadSynth) leadSynth.volume.value = newVolume;
+        }
+
+        // --- Game Setup and Initialization ---
+
+        function resizeCanvas() {
+            // Keep canvas square based on container's smaller dimension
+            const size = Math.min(canvas.parentElement.offsetWidth * 0.8, canvas.parentElement.offsetHeight * 0.8);
+            canvas.width = size;
+            canvas.height = size;
+
+            // Recalculate dynamic sizes
+            playerSize = canvas.width * PLAYER_SIZE_RATIO;
+            objectSize = canvas.width * OBJECT_SIZE_RATIO;
+            playerSpeed = canvas.width * PLAYER_SPEED_RATIO * (1 + (currentLevel - 1) * 0.1); // Speed increases with level
+
+            // Update player and object positions if already initialized, keeping them proportional
+            if (player) {
+                player.x = Math.max(0, Math.min(canvas.width - playerSize, player.x));
+                player.y = Math.max(0, Math.min(canvas.height - playerSize, player.y));
+            }
+            targets = targets.map(t => ({
+                x: Math.max(0, Math.min(canvas.width - objectSize, t.x)),
+                y: Math.max(0, Math.min(canvas.height - objectSize, t.y)),
+                size: objectSize,
+                type: t.type
+            }));
+            obstacles = obstacles.map(o => ({
+                x: Math.max(0, Math.min(canvas.width - objectSize, o.x)),
+                y: Math.max(0, Math.min(canvas.height - objectSize, o.y)),
+                size: objectSize,
+                type: o.type
+            }));
+
+            highScoreDisplay.textContent = `High Score: ${highScore}`;
+
+            // Show mobile controls if touch device detected
+            if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+                mobileControls.classList.remove('hidden');
+            }
+        }
+
+        // Player object
+        function Player() {
+            this.x = (canvas.width - playerSize) / 2;
+            this.y = (canvas.height - playerSize) / 2;
+            this.size = playerSize;
+            this.color = '#7e57c2'; // Medium purple for player
+        }
+
+        // Object factory (for targets and obstacles)
+        function createObject(type) {
+            let obj = {
+                x: Math.random() * (canvas.width - objectSize),
+                y: Math.random() * (canvas.height - objectSize),
+                size: objectSize,
+                type: type // 'target' or 'obstacle'
+            };
+            // Ensure objects don't spawn too close to player
+            const safeDistance = playerSize * 3; // 3 times player size
+            if (player && (Math.abs(obj.x - player.x) < safeDistance && Math.abs(obj.y - player.y) < safeDistance)) {
+                // If too close, try to respawn
+                return createObject(type);
+            }
+            return obj;
+        }
+
+        // Draw elements with SVG-like shapes
+        function drawPlayer() {
+            // Rocket body
+            ctx.fillStyle = player.color;
+            ctx.beginPath();
+            ctx.moveTo(player.x + player.size * 0.2, player.y + player.size);
+            ctx.lineTo(player.x + player.size * 0.8, player.y + player.size);
+            ctx.lineTo(player.x + player.size, player.y + player.size * 0.5);
+            ctx.lineTo(player.x + player.size * 0.5, player.y);
+            ctx.lineTo(player.x, player.y + player.size * 0.5);
+            ctx.closePath();
+            ctx.fill();
+
+            // Rocket exhaust (dynamic based on direction)
+            ctx.fillStyle = 'orange'; // Flame color
+            if (currentDirection.y === 1) { // Moving down
+                ctx.beginPath();
+                ctx.moveTo(player.x + player.size * 0.4, player.y);
+                ctx.lineTo(player.x + player.size * 0.6, player.y);
+                ctx.lineTo(player.x + player.size * 0.5, player.y - player.size * 0.3);
+                ctx.closePath();
+                ctx.fill();
+            } else if (currentDirection.y === -1) { // Moving up
+                ctx.beginPath();
+                ctx.moveTo(player.x + player.size * 0.4, player.y + player.size);
+                ctx.lineTo(player.x + player.size * 0.6, player.y + player.size);
+                ctx.lineTo(player.x + player.size * 0.5, player.y + player.size * 1.3);
+                ctx.closePath();
+                ctx.fill();
+            } else if (currentDirection.x === 1) { // Moving right
+                ctx.beginPath();
+                ctx.moveTo(player.x, player.y + player.size * 0.4);
+                ctx.lineTo(player.x, player.y + player.size * 0.6);
+                ctx.lineTo(player.x - player.size * 0.3, player.y + player.size * 0.5);
+                ctx.closePath();
+                ctx.fill();
+            } else if (currentDirection.x === -1) { // Moving left
+                ctx.beginPath();
+                ctx.moveTo(player.x + player.size, player.y + player.size * 0.4);
+                ctx.lineTo(player.x + player.size, player.y + player.size * 0.6);
+                ctx.lineTo(player.x + player.size * 1.3, player.y + player.size * 0.5);
+                ctx.closePath();
+                ctx.fill();
+            }
+        }
+
+        function drawObject(obj) {
+            if (obj.type === 'target') { // Gem (octagon)
+                ctx.fillStyle = '#a7ffeb'; /* Light aqua for gem */
+                ctx.beginPath();
+                const numSides = 8;
+                const angleIncrement = (2 * Math.PI) / numSides;
+                for (let i = 0; i < numSides; i++) {
+                    const angle = i * angleIncrement;
+                    const x = obj.x + obj.size / 2 + (obj.size / 2) * Math.cos(angle);
+                    const y = obj.y + obj.size / 2 + (obj.size / 2) * Math.sin(angle);
+                    if (i === 0) {
+                        ctx.moveTo(x, y);
+                    } else {
+                        ctx.lineTo(x, y);
+                    }
+                }
+                ctx.closePath();
+                ctx.fill();
+                ctx.strokeStyle = '#00bcd4'; /* Cyan outline */
+                ctx.lineWidth = 1;
+                ctx.stroke();
+            } else { // Obstacles as rough asteroids
+                ctx.fillStyle = '#ef5350'; /* Red for asteroid */
+                ctx.beginPath();
+                ctx.moveTo(obj.x + obj.size * 0.2, obj.y + obj.size * 0.1);
+                ctx.lineTo(obj.x + obj.size * 0.8, obj.y + obj.size * 0.2);
+                ctx.lineTo(obj.x + obj.size * 0.9, obj.y + obj.size * 0.7);
+                ctx.lineTo(obj.x + obj.size * 0.5, obj.y + obj.size * 0.9);
+                ctx.lineTo(obj.x + obj.size * 0.1, obj.y + obj.size * 0.8);
+                ctx.lineTo(obj.x, obj.y + obj.size * 0.3);
+                ctx.closePath();
+                ctx.fill();
+                ctx.strokeStyle = '#ffcdd2'; /* Lighter red outline */
+                ctx.lineWidth = 1;
+                ctx.stroke();
+            }
+        }
+
+        function initializeGame() {
+            gameStarted = true;
+            gameOver = false;
+            score = 0;
+            currentLevel = 1;
+            player = new Player();
+            resetGameElements();
+            gameMessage.textContent = 'Guide your rocket! Collect gems, avoid asteroids!';
+
+            startButton.classList.add('hidden');
+            restartButton.classList.remove('hidden');
+
+            // Start music only if not muted
+            if (!musicMuted) {
+                Tone.start().then(() => {
+                    Tone.Transport.start(); // Start Tone.js transport
+                }).catch(e => console.error("Tone.js start failed:", e));
+            }
+
+            animationFrameId = requestAnimationFrame(gameLoop); // Start the animation loop
+        }
+
+        function resetGameElements() {
+            targets = [];
+            obstacles = [];
+            playerSpeed = canvas.width * PLAYER_SPEED_RATIO * (1 + (currentLevel - 1) * 0.1); // Reset speed for level
+
+            // Populate initial targets and obstacles
+            for (let i = 0; i < INITIAL_TARGETS; i++) {
+                targets.push(createObject('target'));
+            }
+            for (let i = 0; i < INITIAL_OBSTACLES; i++) {
+                obstacles.push(createObject('obstacle'));
+            }
+            updateDisplay();
+        }
+
+        // --- Game Logic ---
+
+        function update() {
+            if (gameOver) return;
+
+            // Move player continuously
+            player.x += currentDirection.x * playerSpeed;
+            player.y += currentDirection.y * playerSpeed;
+
+            // Check for collision with walls
+            if (player.x < 0 || player.x + player.size > canvas.width ||
+                player.y < 0 || player.y + player.size > canvas.height) {
+                endGame("Wall collision!");
+                return;
+            }
+
+            // Check for collisions with obstacles
+            for (let i = 0; i < obstacles.length; i++) {
+                const obs = obstacles[i];
+                if (
+                    player.x < obs.x + obs.size &&
+                    player.x + player.size > obs.x &&
+                    player.y < obs.y + obs.size &&
+                    player.y + player.size > obs.y
+                ) {
+                    endGame("Hit an asteroid!");
+                    return;
+                }
+            }
+
+            // Check for collisions with targets
+            for (let i = 0; i < targets.length; i++) {
+                const target = targets[i];
+                if (
+                    player.x < target.x + target.size &&
+                    player.x + player.size > target.x &&
+                    player.y < target.y + target.size &&
+                    player.y + player.size > target.y
+                ) {
+                    targets.splice(i, 1); // Remove collected target
+                    score += 10; // Increase score
+                    i--; // Adjust index
+                    updateDisplay();
+
+                    // Add a new target
+                    if (targets.length < MAX_TARGETS) {
+                        targets.push(createObject('target'));
+                    }
+
+                    // Check for level up
+                    if (score >= currentLevel * LEVEL_THRESHOLD * 10) { // 50 points per level initially
+                        levelUp();
+                    }
+                }
+            }
+        }
+
+        function levelUp() {
+            currentLevel++;
+            gameMessage.textContent = `Level Up! Level ${currentLevel}`;
+            setTimeout(() => {
+                gameMessage.textContent = 'Keep Dashing!';
+            }, 1000);
+
+            // Increase speed
+            playerSpeed = canvas.width * PLAYER_SPEED_RATIO * (1 + (currentLevel - 1) * 0.1);
+
+            // Add more obstacles (up to MAX_OBSTACLES)
+            if (obstacles.length < MAX_OBSTACLES) {
+                obstacles.push(createObject('obstacle'));
+            }
+
+            // Ensure targets are replenished if needed
+            while (targets.length < INITIAL_TARGETS) {
+                targets.push(createObject('target'));
+            }
+        }
+
+
+        // Main game loop
+        function gameLoop() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
+
+            drawPlayer();
+            targets.forEach(drawObject);
+            obstacles.forEach(drawObject);
+
+            update();
+            animationFrameId = requestAnimationFrame(gameLoop);
+        }
+
+        // End game
+        function endGame(reason) {
+            gameOver = true;
+            gameStarted = false;
+            cancelAnimationFrame(animationFrameId); // Stop animation
+
+            // Stop music
+            if (Tone.Transport.state === 'started') {
+                Tone.Transport.stop();
+            }
+
+            gameMessage.textContent = `Mission Aborted! ${reason} Score: ${score}`;
+
+            if (score > highScore) {
+                highScore = score;
+                localStorage.setItem('arrowDashHighScore', highScore);
+                highScoreDisplay.textContent = `High Score: ${highScore}`;
+                gameMessage.textContent += ` New High Score!`;
+            }
+
+            startButton.classList.add('hidden');
+            restartButton.classList.remove('hidden');
+        }
+
+        // Reset game for a new start
+        function resetGame() {
+            endGame("Resetting..."); // Ensure previous game stops cleanly
+            initializeGame(); // Start fresh
+        }
+
+        // Update score and high score display
+        function updateDisplay() {
+            scoreDisplay.textContent = `Score: ${score}`;
+            highScoreDisplay.textContent = `High Score: ${highScore}`;
+        }
+
+        // --- Event Listeners ---
+
+        // Keyboard controls
+        document.addEventListener('keydown', (e) => {
+            if (!gameStarted || gameOver) return;
+            switch (e.key) {
+                case 'ArrowUp':
+                    currentDirection = { x: 0, y: -1 };
+                    break;
+                case 'ArrowDown':
+                    currentDirection = { x: 0, y: 1 };
+                    break;
+                case 'ArrowLeft':
+                    currentDirection = { x: -1, y: 0 };
+                    break;
+                case 'ArrowRight':
+                    currentDirection = { x: 1, y: 0 };
+                    break;
+            }
+        });
+
+        // Touch controls (D-pad)
+        function setTouchDirection(x, y) {
+            if (!gameStarted || gameOver) return;
+            currentDirection = { x: x, y: y };
+        }
+
+        upButton.addEventListener('touchstart', () => setTouchDirection(0, -1));
+        downButton.addEventListener('touchstart', () => setTouchDirection(0, 1));
+        leftButton.addEventListener('touchstart', () => setTouchDirection(-1, 0));
+        rightButton.addEventListener('touchstart', () => setTouchDirection(1, 0));
+
+        // Prevent scrolling on touch devices while playing
+        canvas.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+        }, { passive: false });
+
+
+        // Button click handlers
+        startButton.addEventListener('click', initializeGame);
+        restartButton.addEventListener('click', resetGame);
+        toggleMusicButton.addEventListener('click', toggleMusic);
+        volumeSlider.addEventListener('input', changeVolume);
+
+
+        // Initial setup on window load and resize
+        window.onload = () => {
+            resizeCanvas();
+            // Initialize player so its dimensions are set correctly for initial draw
+            player = new Player();
+            drawPlayer();
+            gameMessage.textContent = 'Guide your rocket! Collect gems, avoid asteroids!';
+            updateDisplay();
+            setupMusic(); // Initialize music
+            // Ensure music starts only after user interaction due to browser policies
+            // The toggleMusic function handles Tone.start() on first click
+        };
+        window.onresize = resizeCanvas;
+    </script>
+</body>
+</html>
