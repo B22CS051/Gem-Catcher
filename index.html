@@ -17,88 +17,89 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background: linear-gradient(135deg, #2a0050, #0a0a2a); /* Deep space gradient */
+            background: linear-gradient(135deg, #150030, #00001a); /* Even deeper space gradient */
             overflow: hidden; /* Prevent scrollbars */
         }
 
         .game-container {
-            background-color: #1a003a; /* Darker space background */
+            background-color: #0d0026; /* Darkest space background */
             border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            padding: 20px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7); /* Stronger shadow */
+            padding: 25px; /* Slightly more padding */
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 20px;
+            gap: 25px; /* More spacing */
             max-width: 90vw; /* Responsive width */
             max-height: 90vh; /* Responsive height */
             margin: 20px; /* Add some margin for smaller screens */
-            border: 2px solid #5a189a; /* Cosmic border */
+            border: 3px solid #7c1fa2; /* Brighter cosmic border */
         }
 
         .game-info {
             display: flex;
             justify-content: space-between;
             width: 100%;
-            padding: 0 10px;
-            font-size: 1.25rem;
+            padding: 0 15px; /* More padding */
+            font-size: 1.35rem; /* Slightly larger font */
             font-weight: bold;
-            color: #d1c4e9; /* Light purple for text */
+            color: #e0b0ff; /* Lighter, more vibrant purple for text */
+            text-shadow: 0 0 5px rgba(224, 176, 255, 0.5); /* Subtle glow */
         }
 
         canvas {
-            background-color: #0d0d21; /* Very dark blue for canvas space */
-            border-radius: 15px;
-            border: 2px solid #4a148c; /* Dark purple border */
+            background-color: #03030c; /* Almost black for canvas space */
+            border-radius: 18px; /* Slightly more rounded */
+            border: 3px solid #5a148c; /* Deeper purple border */
             display: block;
             touch-action: none; /* Disable default touch actions */
-            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.4); /* Deeper inner shadow */
+            box-shadow: inset 0 3px 15px rgba(0, 0, 0, 0.6); /* Deeper inner shadow */
             transition: all 0.3s ease; /* Smooth transition for resizing/updates */
             width: clamp(280px, 80vw, 500px); /* Responsive canvas size */
             height: clamp(280px, 80vw, 500px);
         }
 
         .game-message {
-            font-size: 1.5rem;
+            font-size: 1.6rem; /* Slightly larger message font */
             font-weight: bold;
-            color: #ffeb3b; /* Bright yellow for messages */
-            text-shadow: 0 0 5px rgba(255, 235, 59, 0.7);
+            color: #ffee58; /* Brighter yellow for messages */
+            text-shadow: 0 0 8px rgba(255, 238, 88, 0.9); /* Stronger glow */
             text-align: center;
-            min-height: 2em; /* Reserve space to prevent CLS */
+            min-height: 2.2em; /* Reserve space to prevent CLS */
         }
 
         .game-controls {
             display: flex;
-            gap: 15px;
+            gap: 18px; /* More spacing */
             width: 100%;
             justify-content: center;
             flex-wrap: wrap; /* Allow controls to wrap on smaller screens */
         }
 
         .game-button {
-            background: linear-gradient(145deg, #6a1b9a, #8e24aa); /* Purple gradient */
+            background: linear-gradient(145deg, #7b1fa2, #9c27b0); /* Brighter purple gradient */
             color: white;
-            padding: 12px 25px;
+            padding: 14px 28px; /* Larger padding */
             border: none;
-            border-radius: 10px;
-            font-size: 1rem;
+            border-radius: 12px; /* More rounded */
+            font-size: 1.05rem; /* Slightly larger font */
             font-weight: bold;
             cursor: pointer;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5); /* Stronger shadow */
             transition: all 0.3s ease;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.06em; /* More letter spacing */
         }
 
         .game-button:hover {
-            background: linear-gradient(145deg, #7b1fa2, #9c27b0);
-            box-shadow: 0 7px 20px rgba(0, 0, 0, 0.5);
-            transform: translateY(-2px);
+            background: linear-gradient(145deg, #8e24aa, #ab47bc);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+            transform: translateY(-3px); /* More pronounced lift */
         }
 
         .game-button:active {
             transform: translateY(0);
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
         }
 
         /* D-pad style touch controls */
@@ -106,21 +107,21 @@
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             grid-template-rows: repeat(3, 1fr);
-            gap: 5px;
-            width: 180px; /* Fixed width for D-pad */
-            height: 180px; /* Fixed height for D-pad */
-            margin-top: 15px;
-            background-color: rgba(0, 0, 0, 0.2);
-            border-radius: 15px;
-            padding: 10px;
+            gap: 8px; /* More gap */
+            width: 200px; /* Slightly larger D-pad */
+            height: 200px; /* Slightly larger D-pad */
+            margin-top: 20px;
+            background-color: rgba(0, 0, 0, 0.3); /* Slightly darker */
+            border-radius: 18px;
+            padding: 12px;
         }
 
         .touch-button-dpad {
-            background: #8e24aa; /* Deep purple */
+            background: #ab47bc; /* Medium purple */
             color: white;
             border: none;
-            border-radius: 8px;
-            font-size: 1.5rem;
+            border-radius: 10px;
+            font-size: 1.7rem; /* Larger arrow font */
             font-weight: bold;
             cursor: pointer;
             display: flex;
@@ -131,12 +132,12 @@
             -moz-user-select: none;
             -ms-user-select: none;
             transition: background-color 0.1s ease;
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
         }
 
         .touch-button-dpad:active {
-            background: #6a1b9a;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            background: #8e24aa;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
         }
 
         /* Specific grid placement for D-pad buttons */
@@ -149,56 +150,57 @@
         .music-controls {
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin-top: 10px;
-            padding: 0 10px;
+            gap: 12px; /* More spacing */
+            margin-top: 15px;
+            padding: 0 15px;
             width: 100%;
             justify-content: center;
             flex-wrap: wrap;
-            color: #d1c4e9;
+            color: #e0b0ff; /* Lighter text */
         }
         .music-controls label {
             font-weight: bold;
         }
         .music-controls input[type="range"] {
             -webkit-appearance: none;
-            width: 100px;
-            height: 8px;
-            background: #4a148c; /* Dark purple track */
+            width: 110px; /* Slightly wider */
+            height: 10px; /* Thicker track */
+            background: #6a1b9a; /* Dark purple track */
             border-radius: 5px;
             outline: none;
-            opacity: 0.7;
+            opacity: 0.8;
             transition: opacity .2s;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
         }
         .music-controls input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
-            width: 18px;
-            height: 18px;
+            width: 20px; /* Larger thumb */
+            height: 20px; /* Larger thumb */
             border-radius: 50%;
-            background: #e0f7fa; /* Light cyan thumb */
+            background: #a7ffeb; /* Vibrant cyan thumb */
             cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
         }
         .music-controls input[type="range"]::-moz-range-thumb {
-            width: 18px;
-            height: 18px;
+            width: 20px;
+            height: 20px;
             border-radius: 50%;
-            background: #e0f7fa; /* Light cyan thumb */
+            background: #a7ffeb; /* Vibrant cyan thumb */
             cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
         }
 
         .music-button {
             background: #00bcd4; /* Cyan */
             color: white;
-            padding: 8px 15px;
+            padding: 10px 18px; /* Larger padding */
             border: none;
-            border-radius: 8px;
-            font-size: 0.9rem;
+            border-radius: 10px; /* More rounded */
+            font-size: 1rem; /* Slightly larger font */
             cursor: pointer;
             transition: background-color 0.2s ease;
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
         }
         .music-button:hover {
             background: #00acc1;
@@ -235,43 +237,6 @@
                 flex-direction: column; /* Stack music controls on small screens */
             }
         }
-
-        /* SVG for Player (Rocket) */
-        .player-svg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            fill: #7e57c2; /* Medium purple for rocket body */
-            stroke: #d1c4e9; /* Light outline */
-            stroke-width: 1;
-            filter: drop-shadow(0 0 5px rgba(126, 87, 194, 0.8)); /* Subtle glow */
-        }
-        .player-fire {
-            fill: orange; /* Flame color */
-            filter: drop-shadow(0 0 5px rgba(255, 165, 0, 0.8));
-        }
-
-        /* SVG for Target (Star/Gem) */
-        .target-svg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            fill: #a7ffeb; /* Light aqua for gem */
-            stroke: #00bcd4; /* Cyan outline */
-            stroke-width: 1;
-            filter: drop-shadow(0 0 5px rgba(167, 255, 235, 0.8)); /* Subtle glow */
-        }
-
-        /* SVG for Obstacle (Asteroid/Spike) */
-        .obstacle-svg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            fill: #ef5350; /* Red for asteroid */
-            stroke: #ffcdd2; /* Lighter red outline */
-            stroke-width: 1;
-            filter: drop-shadow(0 0 5px rgba(239, 83, 80, 0.8)); /* Subtle glow */
-        }
     </style>
 </head>
 <body class="flex items-center justify-center min-h-screen">
@@ -284,6 +249,7 @@
         <div id="gameMessage" class="game-message">Guide your rocket! Collect gems, avoid asteroids!</div>
         <div class="game-controls">
             <button id="startButton" class="game-button">Launch!</button>
+            <button id="pauseButton" class="game-button hidden">Pause</button> <!-- New pause button -->
             <button id="restartButton" class="game-button hidden">Restart Mission</button>
         </div>
         <!-- D-pad style touch controls for mobile -->
@@ -308,6 +274,7 @@
         const highScoreDisplay = document.getElementById('high-score');
         const gameMessage = document.getElementById('gameMessage');
         const startButton = document.getElementById('startButton');
+        const pauseButton = document.getElementById('pauseButton'); // Get the new pause button element
         const restartButton = document.getElementById('restartButton');
         const mobileControls = document.getElementById('mobileControls');
         const upButton = document.getElementById('upButton');
@@ -324,6 +291,7 @@
         let highScore = localStorage.getItem('arrowDashHighScore') || 0;
         let gameOver = false;
         let gameStarted = false;
+        let isPaused = false; // New state variable for pause functionality
         let animationFrameId;
 
         // Game configuration (relative to canvas size for responsiveness)
@@ -341,80 +309,84 @@
         let currentLevel = 1;
 
         // Tone.js specific variables
-        let mainSynth, bassSynth, leadSynth;
-        let mainLoop, bassLoop, leadLoop;
+        let melodySynth, bassSynth, padSynth;
+        let melodyLoop, bassLoop, padLoop;
         let musicMuted = false;
 
-        // --- Music Setup (More complex and enjoyable) ---
+        // --- Music Setup (Lighter, more ethereal theme) ---
         function setupMusic() {
-            // Initialize main ambient synth
-            mainSynth = new Tone.PolySynth(Tone.Synth, {
-                oscillator: { type: "triangle" },
-                envelope: { attack: 0.5, decay: 0.5, sustain: 0.7, release: 1.2 },
-                volume: -18
+            // Melody Synth (airy, high-pitched)
+            melodySynth = new Tone.PolySynth(Tone.Synth, {
+                oscillator: { type: "triangle" }, // A bit softer than saw, brighter than sine
+                envelope: { attack: 0.1, decay: 0.2, sustain: 0.4, release: 0.5 },
+                volume: -20 // Quieter melody
             }).toDestination();
 
-            // Initialize bass synth
-            bassSynth = new Tone.Synth({
-                oscillator: { type: "square" },
-                envelope: { attack: 0.1, decay: 0.3, sustain: 0.6, release: 0.7 },
-                volume: -12
+            // Bass Synth (smooth, warm pads)
+            bassSynth = new Tone.PolySynth(Tone.Synth, { // Using PolySynth for bass chords if desired
+                oscillator: { type: "sine" }, // Pure tone for smooth bass
+                envelope: { attack: 0.5, decay: 0.8, sustain: 0.6, release: 1 },
+                volume: -20 // Gentle bass
             }).toDestination();
 
-            // Initialize lead synth (for more melodic elements)
-            leadSynth = new Tone.Synth({
+            // Pad Synth (wide, atmospheric background)
+            padSynth = new Tone.PolySynth(Tone.AMSynth, { // AM (Amplitude Modulation) Synth for richer pads
+                harmonicity: 1.5,
                 oscillator: { type: "sine" },
-                envelope: { attack: 0.05, decay: 0.1, sustain: 0.4, release: 0.5 },
-                volume: -20
+                envelope: { attack: 3, decay: 1, sustain: 0.5, release: 4 }, // Long, evolving pads
+                volume: -35 // Very subtle, far-off pads
             }).toDestination();
 
-            // Main ambient chord progression
-            const mainNotes = [
-                ["C3", "E3", "G3"],
-                ["F3", "A3", "C4"],
-                ["G3", "B3", "D4"],
-                ["C3", "E3", "G3"]
+            // Melody progression (simple, uplifting, higher register)
+            const melodyNotes = ["C5", "G5", "A5", "E5", "C5", "F5", "D5", "G5"];
+            let melodyNoteIndex = 0;
+            melodyLoop = new Tone.Loop((time) => {
+                melodySynth.triggerAttackRelease(melodyNotes[melodyNoteIndex % melodyNotes.length], "0.5s", time);
+                melodyNoteIndex++;
+            }, "0.5s").start(0);
+
+            // Bass progression (simple arpeggiated or sustained chords in lower register)
+            const bassChords = [
+                ["C3", "E3", "G3"], // C Maj
+                ["F3", "A3", "C4"], // F Maj
+                ["G3", "B3", "D4"], // G Maj
+                ["C3", "E3", "G3"]  // C Maj
             ];
-            let mainNoteIndex = 0;
-            mainLoop = new Tone.Loop((time) => {
-                mainSynth.triggerAttackRelease(mainNotes[mainNoteIndex % mainNotes.length], "2n", time);
-                mainNoteIndex++;
-            }, "2n").start(0); // Repeat every half note
-
-            // Bass line following the root notes
-            const bassNotes = ["C2", "F2", "G2", "C2"];
-            let bassNoteIndex = 0;
+            let bassChordIndex = 0;
             bassLoop = new Tone.Loop((time) => {
-                bassSynth.triggerAttackRelease(bassNotes[bassNoteIndex % bassNotes.length], "1n", time);
-                bassNoteIndex++;
-            }, "1n").start(0); // Repeat every whole note
+                bassSynth.triggerAttackRelease(bassChords[bassChordIndex % bassChords.length], "2n", time);
+                bassChordIndex++;
+            }, "2n").start(0); // Each chord for 2 notes (half note duration)
 
-            // Occasional lead melody notes
-            const leadNotes = ["G4", "A4", "Bb4", "G4", "C5", "Bb4", "A4", "G4", null, "F4", "Eb4", "D4", null];
-            let leadNoteIndex = 0;
-            leadLoop = new Tone.Loop((time) => {
-                const note = leadNotes[leadNoteIndex % leadNotes.length];
-                if (note) {
-                    leadSynth.triggerAttackRelease(note, "8n", time);
-                }
-                leadNoteIndex++;
-            }, "4n").start(0); // Repeat every quarter note
+            // Pad progression (very slow, ambient changes)
+            const padChordsProgression = [
+                ["C4", "E4", "G4", "B4"], // Cmaj7
+                ["F4", "A4", "C5", "E5"], // Fmaj7
+                ["G4", "B4", "D5", "F5"], // G7
+                ["C4", "E4", "G4", "B4"]  // Cmaj7
+            ];
+            let padChordProgressionIndex = 0;
+            padLoop = new Tone.Loop((time) => {
+                padSynth.triggerAttackRelease(padChordsProgression[padChordProgressionIndex % padChordsProgression.length], "4n", time);
+                padChordProgressionIndex++;
+            }, "4n").start(0); // Each chord held for a full note
 
             // Initial volume from slider
             const initialVolume = parseFloat(volumeSlider.value);
-            mainSynth.volume.value = initialVolume;
-            bassSynth.volume.value = initialVolume;
-            leadSynth.volume.value = initialVolume;
+            if (melodySynth) melodySynth.volume.value = initialVolume;
+            if (bassSynth) bassSynth.volume.value = initialVolume;
+            if (padSynth) padSynth.volume.value = initialVolume;
         }
 
         function toggleMusic() {
-            if (Tone.Transport.state === 'started') {
+            if (Tone.Transport.state === 'started' || isPaused) { // If music is playing or paused, stop it
                 Tone.Transport.stop();
                 toggleMusicButton.textContent = '🔇 Music Off';
                 toggleMusicButton.classList.remove('active');
                 musicMuted = true;
-            } else {
+            } else { // If music is stopped, start it
                 // Tone.start() ensures audio context is running, important for user interaction
+                // It will only activate the audio context if it hasn't been activated already.
                 Tone.start().then(() => {
                     Tone.Transport.start();
                     toggleMusicButton.textContent = '🔊 Music On';
@@ -426,9 +398,9 @@
 
         function changeVolume() {
             const newVolume = parseFloat(volumeSlider.value);
-            if (mainSynth) mainSynth.volume.value = newVolume;
+            if (melodySynth) melodySynth.volume.value = newVolume;
             if (bassSynth) bassSynth.volume.value = newVolume;
-            if (leadSynth) leadSynth.volume.value = newVolume;
+            if (padSynth) padSynth.volume.value = newVolume;
         }
 
         // --- Game Setup and Initialization ---
@@ -498,7 +470,7 @@
         // Draw elements with SVG-like shapes
         function drawPlayer() {
             // Rocket body
-            ctx.fillStyle = player.color;
+            ctx.fillStyle = '#9c27b0'; /* Brighter purple for rocket body */
             ctx.beginPath();
             ctx.moveTo(player.x + player.size * 0.2, player.y + player.size);
             ctx.lineTo(player.x + player.size * 0.8, player.y + player.size);
@@ -509,7 +481,9 @@
             ctx.fill();
 
             // Rocket exhaust (dynamic based on direction)
-            ctx.fillStyle = 'orange'; // Flame color
+            ctx.fillStyle = '#ff9800'; /* Brighter orange for flame */
+            ctx.shadowColor = 'rgba(255, 152, 0, 0.8)';
+            ctx.shadowBlur = 10;
             if (currentDirection.y === 1) { // Moving down
                 ctx.beginPath();
                 ctx.moveTo(player.x + player.size * 0.4, player.y);
@@ -539,11 +513,14 @@
                 ctx.closePath();
                 ctx.fill();
             }
+            ctx.shadowBlur = 0; // Reset shadow
         }
 
         function drawObject(obj) {
             if (obj.type === 'target') { // Gem (octagon)
-                ctx.fillStyle = '#a7ffeb'; /* Light aqua for gem */
+                ctx.fillStyle = '#84ffff'; /* Super light aqua for gem */
+                ctx.shadowColor = 'rgba(132, 255, 255, 0.7)';
+                ctx.shadowBlur = 10;
                 ctx.beginPath();
                 const numSides = 8;
                 const angleIncrement = (2 * Math.PI) / numSides;
@@ -559,29 +536,36 @@
                 }
                 ctx.closePath();
                 ctx.fill();
-                ctx.strokeStyle = '#00bcd4'; /* Cyan outline */
-                ctx.lineWidth = 1;
+                ctx.strokeStyle = '#00e5ff'; /* Brighter cyan outline */
+                ctx.lineWidth = 2; /* Thicker outline */
                 ctx.stroke();
+                ctx.shadowBlur = 0; // Reset shadow
             } else { // Obstacles as rough asteroids
                 ctx.fillStyle = '#ef5350'; /* Red for asteroid */
+                ctx.shadowColor = 'rgba(239, 83, 80, 0.7)';
+                ctx.shadowBlur = 8;
                 ctx.beginPath();
+                // More jagged shape for asteroid
                 ctx.moveTo(obj.x + obj.size * 0.2, obj.y + obj.size * 0.1);
                 ctx.lineTo(obj.x + obj.size * 0.8, obj.y + obj.size * 0.2);
-                ctx.lineTo(obj.x + obj.size * 0.9, obj.y + obj.size * 0.7);
-                ctx.lineTo(obj.x + obj.size * 0.5, obj.y + obj.size * 0.9);
-                ctx.lineTo(obj.x + obj.size * 0.1, obj.y + obj.size * 0.8);
+                ctx.lineTo(obj.x + obj.size * 0.95, obj.y + obj.size * 0.5);
+                ctx.lineTo(obj.x + obj.size * 0.8, obj.y + obj.size * 0.9);
+                ctx.lineTo(obj.x + obj.size * 0.4, obj.y + obj.size * 0.95);
+                ctx.lineTo(obj.x + obj.size * 0.1, obj.y + obj.size * 0.7);
                 ctx.lineTo(obj.x, obj.y + obj.size * 0.3);
                 ctx.closePath();
                 ctx.fill();
-                ctx.strokeStyle = '#ffcdd2'; /* Lighter red outline */
-                ctx.lineWidth = 1;
+                ctx.strokeStyle = '#ff8a80'; /* Lighter red outline */
+                ctx.lineWidth = 2; /* Thicker outline */
                 ctx.stroke();
+                ctx.shadowBlur = 0; // Reset shadow
             }
         }
 
         function initializeGame() {
             gameStarted = true;
             gameOver = false;
+            isPaused = false; // Ensure game starts unpaused
             score = 0;
             currentLevel = 1;
             player = new Player();
@@ -589,13 +573,13 @@
             gameMessage.textContent = 'Guide your rocket! Collect gems, avoid asteroids!';
 
             startButton.classList.add('hidden');
-            restartButton.classList.remove('hidden');
+            pauseButton.classList.remove('hidden'); // Show pause button
+            restartButton.classList.add('hidden'); // Hide restart until game over or reset
 
             // Start music only if not muted
             if (!musicMuted) {
-                Tone.start().then(() => {
-                    Tone.Transport.start(); // Start Tone.js transport
-                }).catch(e => console.error("Tone.js start failed:", e));
+                // Tone.start() is now only called within toggleMusic to ensure user gesture initiation
+                Tone.Transport.start();
             }
 
             animationFrameId = requestAnimationFrame(gameLoop); // Start the animation loop
@@ -619,7 +603,7 @@
         // --- Game Logic ---
 
         function update() {
-            if (gameOver) return;
+            if (gameOver || isPaused) return; // Do not update if paused or game over
 
             // Move player continuously
             player.x += currentDirection.x * playerSpeed;
@@ -677,7 +661,9 @@
             currentLevel++;
             gameMessage.textContent = `Level Up! Level ${currentLevel}`;
             setTimeout(() => {
-                gameMessage.textContent = 'Keep Dashing!';
+                if (!isPaused && gameStarted) { // Only restore if not paused or game over
+                   gameMessage.textContent = 'Keep Dashing!';
+                }
             }, 1000);
 
             // Increase speed
@@ -697,20 +683,42 @@
 
         // Main game loop
         function gameLoop() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
+            if (!isPaused) { // Only draw and update if not paused
+                ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
 
-            drawPlayer();
-            targets.forEach(drawObject);
-            obstacles.forEach(drawObject);
+                drawPlayer();
+                targets.forEach(drawObject);
+                obstacles.forEach(drawObject);
 
-            update();
+                update();
+            }
             animationFrameId = requestAnimationFrame(gameLoop);
         }
+
+        // Pause/Resume game
+        function togglePause() {
+            if (!gameStarted || gameOver) return; // Can only pause if game is running
+
+            isPaused = !isPaused;
+            if (isPaused) {
+                gameMessage.textContent = "Game Paused. Click PAUSE to resume.";
+                pauseButton.textContent = "Resume";
+                Tone.Transport.pause(); // Pause music
+            } else {
+                gameMessage.textContent = 'Keep Dashing!';
+                pauseButton.textContent = "Pause";
+                if (!musicMuted) { // Resume music only if not globally muted
+                    Tone.Transport.start();
+                }
+            }
+        }
+
 
         // End game
         function endGame(reason) {
             gameOver = true;
             gameStarted = false;
+            isPaused = false; // Ensure game is unpaused visually on game over
             cancelAnimationFrame(animationFrameId); // Stop animation
 
             // Stop music
@@ -728,7 +736,8 @@
             }
 
             startButton.classList.add('hidden');
-            restartButton.classList.remove('hidden');
+            pauseButton.classList.add('hidden'); // Hide pause button
+            restartButton.classList.remove('hidden'); // Show restart button
         }
 
         // Reset game for a new start
@@ -747,7 +756,7 @@
 
         // Keyboard controls
         document.addEventListener('keydown', (e) => {
-            if (!gameStarted || gameOver) return;
+            if (gameOver || isPaused) return; // Ignore input if game over or paused
             switch (e.key) {
                 case 'ArrowUp':
                     currentDirection = { x: 0, y: -1 };
@@ -758,15 +767,19 @@
                 case 'ArrowLeft':
                     currentDirection = { x: -1, y: 0 };
                     break;
-                case 'ArrowRight':
+                    case 'ArrowRight':
                     currentDirection = { x: 1, y: 0 };
+                    break;
+                case 'p': // 'P' key for pause
+                case 'P':
+                    togglePause();
                     break;
             }
         });
 
         // Touch controls (D-pad)
         function setTouchDirection(x, y) {
-            if (!gameStarted || gameOver) return;
+            if (gameOver || isPaused) return; // Ignore input if game over or paused
             currentDirection = { x: x, y: y };
         }
 
@@ -783,6 +796,7 @@
 
         // Button click handlers
         startButton.addEventListener('click', initializeGame);
+        pauseButton.addEventListener('click', togglePause); // Event listener for the new pause button
         restartButton.addEventListener('click', resetGame);
         toggleMusicButton.addEventListener('click', toggleMusic);
         volumeSlider.addEventListener('input', changeVolume);
